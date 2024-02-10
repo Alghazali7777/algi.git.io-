@@ -1,0 +1,203 @@
+:root {
+  --mainColor: #000;
+  --secondColor: #333646;
+  --acsenColor: #a367b1;
+  --bodycolor: #fff;
+  --backgroundColor: #171717;
+  --violet: #ee82ee;
+}
+
+* {
+  font-family: montserrat;
+}
+
+body {
+  background: var(--bodycolor);
+}
+.section-padding {
+  padding: 100px 0;
+}
+
+/* Section Hero */
+
+.video-section {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: auto;
+}
+
+/* And Section Hero */
+
+/* Carousel */
+
+.carousel-item {
+  height: 50vh;
+  min-height: 90px;
+}
+
+.carousel-caption {
+  bottom: 220px;
+  z-index: 2;
+}
+
+.carousel-caption h5 {
+  font-size: 45px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 25px;
+}
+
+.carousel-caption p {
+  width: 60%;
+  margin: auto;
+  font-size: 18px;
+  line-height: 1.9;
+}
+.carousel-inner::before {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: var(--acsenColor);
+  z-index: 1;
+}
+
+/* And Carousel */
+
+/* Section Navbar */
+
+.navbar-nav {
+  font-size: 15px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.navbar-light .navbar-brand {
+  color: var(--bodycolor);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.navbar-light .navbar-brand:focus,
+.navbar-light .navbar-brand:hover {
+  color: var(--mainColor);
+}
+
+.navbar-light .navbar-nav .navbar-link {
+  color: var(--mainColor);
+}
+
+.w-100 {
+  height: 100vh;
+}
+
+.nav-item-active {
+  color: var(--acsenColor) !important;
+  font-weight: 700;
+}
+
+.navbar-nav a:focus,
+.navbar-nav a:hover {
+  color: var(--violet) !important;
+}
+
+.navbar-light .navbar-toggler:hover {
+  color: var(--violet) !important;
+}
+
+/* And Section Navbar */
+
+/* btn */
+
+.btn-dark {
+  background-color: var(--mainColor) !important;
+  color: #fff;
+  padding: 0.55rem 0;
+  width: 140px;
+  border-radius: 20px;
+}
+
+.btn-dark:hover {
+  color: var(--violet) !important;
+  background-color: #fff;
+  border-color: var(--bodycolor) !important;
+}
+
+/* And Btn */
+
+/* Services */
+
+.services .card-body {
+  font-size: 50px;
+  border-radius: 20px;
+  background-color: var(--backgroundColor) !important;
+}
+
+/* And Services */
+
+.Browser {
+  background-color: var(--backgroundColor) !important;
+}
+
+/* Section 6 */
+
+.Statistics {
+  background: var(--backgroundColor) !important;
+}
+
+.Statistics .circle-icon {
+  width: 95px;
+  height: 95px;
+  border-radius: 50%;
+}
+
+/* And Section 6 */
+
+.icon {
+  font-size: 100%;
+  color: #fff;
+}
+
+/* Section Home*/
+
+.home {
+  background: var(--backgroundColor) !important;
+}
+
+/* And Section Home*/
+
+/* Section Icon*/
+
+.list-inline-item {
+  color: #fff;
+  font-size: 100%;
+}
+
+.list-inline-item:hover {
+  color: var(--violet) !important;
+  background-color: var(--acsenColor) !important;
+  border-color: var(--bodycolor) !important;
+  border-radius: 10px;
+  box-shadow: var(--bodycolor) !important;
+}
+
+/* And Section Icon*/
+
+
+
+.circle-icon:hover {
+  color: var(--backgroundColor) !important;
+  background-color: grey !important;
+  border-color: var(--bodycolor) !important;
+  box-shadow: var(--bodycolor) !important;
+  z-index: 5;
+}
+
+.navbar-toggler {
+  border-color: var(--acsenColor) !important;
+  background-color: var(--bodycolor) !important;
+  color: var(--bodycolor) !important;
+}
