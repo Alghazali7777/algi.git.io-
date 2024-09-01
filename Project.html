@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Ghazaly</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>document.documentElement.classList.add('js')</script>
+    <script src="https://unpkg.com/taos@1.0.5/dist/taos.js"></script>
+    <!-- Tambahkan ini di dalam tag <head> atau sebelum penutup tag </body> -->
+    <script src="https://cdn.jsdelivr.net/npm/keen-slider@latest/keen-slider.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/keen-slider@latest/keen-slider.min.css" />
+    <link rel="icon" href="image/Frame 123 (4).png" type="image/gif" sizes="16x16">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@0.7.4/dist/preflight.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@0.7.4/dist/utilities.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+
+        html {
+            scroll-behavior: smooth;
+            font-family: "Poppins", sans-serif;
+        }
+
+        /* Animasi untuk slide-in dari kanan */
+        @keyframes slideInFromRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Animasi untuk slide-out ke kanan */
+        @keyframes slideOutToRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 100%;
+            background-color: #09090b;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 50;
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+            animation: slideInFromRight 0.3s ease-out forwards;
+        }
+
+        .sidebar.close {
+            animation: slideOutToRight 0.3s ease-out forwards;
+            transform: translateX(100%);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            margin-top: 100px;
+            text-align: center;
+        }
+
+        .sidebar ul li {
+            padding: 15px 20px;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            display: block;
+        }
+
+        .sidebar ul li a:hover {
+            color: #e11d48;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: white;
+        }
+
+        .menu-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: white;
+        }
+
+        /* Navbar untuk tampilan desktop */
+        nav.desktop-nav {
+            display: none;
+        }
+
+        /* Menampilkan navbar saat di desktop */
+        @media (min-width: 768px) {
+            nav.desktop-nav {
+                display: flex;
+                gap: 20px;
+            }
+
+            .menu-btn {
+                display: none;
+            }
+
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-zinc-950 text-white">
+    <!-- Header dengan tombol hamburger dan navbar desktop -->
+    <header
+        class="relative w-100 h-100 mx-auto max-w-screen-xl px-4 p-6 flex items-center justify-between bg-zinc-950 sticky top-0 z-50">
+        <a href="Home.html">
+            <div class="flex items-center space-x-3">
+                <img src="image/Frame 123 (4).png" alt="Logo" class="w-10 h-10 rounded-full">
+                <div class="text-lg font-bold">
+                    <span class="font-serif text-white">Al Ghazaly</span>
+                </div>
+            </div>
+        </a>
+        <button id="menu-btn" class="menu-btn md:hidden">
+            <!-- Icon hamburger -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+
+        <!-- Navbar desktop -->
+        <nav class="desktop-nav hidden px-4 md:flex text-lg font-bold space-x-4">
+            <a href="Home.html" id="home-btn" class="text-rose-600 hover:text-rose-600">Home</a>
+            <a href="Project.html" class="hover:text-rose-600">Project</a>
+            <a href="Contact.html" class="hover:text-rose-600">Contact</a>
+        </nav>
+    </header>
+
+    <style>
+        header {
+            background-color: rgba(0, 0, 0, 1);
+            /* Warna hitam sepenuhnya tidak transparan */
+            transition: background-color 0.5s ease;
+            /* Durasi transisi 0.5 detik */
+        }
+
+        .header-transparent {
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Warna hitam dengan transparansi 50% */
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const header = document.querySelector('header');
+            const scrollThreshold = 50; // Ketinggian scroll yang diperlukan untuk mengubah warna
+
+            window.addEventListener('scroll', function () {
+                if (window.scrollY > scrollThreshold) {
+                    header.classList.add('header-transparent');
+                } else {
+                    header.classList.remove('header-transparent');
+                }
+            });
+        });
+    </script>
+
+    <!-- Sidebar navigasi untuk mobile -->
+    <div id="sidebar" class="sidebar">
+        <span id="close-btn" class="close-btn">&times;</span>
+        <ul>
+            <li>
+                <a href="" id="home-btn-sidebar">
+                    <div class="flex flex-col items-center space-y-2">
+                        <img src="image/Frame 123 (4).png" alt="Logo" class="w-10 h-10 rounded-full">
+                        <div class="text-lg font-bold">
+                            <span class="font-serif text-white">Al Ghazaly</span>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="Home.html" class="text-rose-600 hover:text-rose-600">
+                    Home
+                </a>
+            </li>
+            <li>
+                <a href="Project.html" class="hover:text-rose-600">
+                    Project
+                </a>
+            </li>
+            <li>
+                <a href="Contact.html" class="hover:text-rose-600">
+                    Contact
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const closeBtn = document.getElementById('close-btn');
+
+        // Fungsi untuk membuka sidebar
+        function openSidebar() {
+            sidebar.classList.remove('close');
+            sidebar.classList.add('open');
+        }
+
+        // Fungsi untuk menutup sidebar
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            sidebar.classList.add('close');
+        }
+
+        menuBtn.addEventListener('click', () => {
+            openSidebar();
+        });
+
+        closeBtn.addEventListener('click', () => {
+            closeSidebar();
+        });
+
+        // Menutup sidebar saat pengguna mengklik sembarang tempat di halaman di luar sidebar
+        document.addEventListener('click', function (event) {
+            const targetElement = event.target; // Elemen yang diklik
+            if (!sidebar.contains(targetElement) && !menuBtn.contains(targetElement)) {
+                if (sidebar.classList.contains('open')) {
+                    closeSidebar();
+                }
+            }
+        });
+    </script>
+
+    <section
+        class="relative w-100 h-100 mx-auto max-w-screen-xl px-4 delay-[300ms] duration-[600ms] taos:translate-y-[200px] taos:opacity-0"
+        data-taos-offset="300">
+        <div class="relative w-full max-w-screen-xl mx-auto px-4 py-8">
+            <div
+                class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 transition-all delay-300 duration-600 taos:translate-y-20 taos:opacity-0">
+                <span class="shrink-0 px-4 text-center text-lg sm:text-xl lg:text-2xl font-bold">
+                    This project was made with
+                    <span class="shrink-0 px-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-rose-600"
+                        id="start1">0++</span>
+                    designs in the Figma application
+                </span>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const stats = [
+                    { id: 'start1', endValue: 3500, duration: 20000 },
+                ];
+
+                stats.forEach(stat => {
+                    const element = document.getElementById(stat.id);
+                    const startValue = 0;
+                    const endValue = stat.endValue;
+                    const duration = stat.duration;
+                    const stepTime = Math.abs(Math.floor(duration / endValue));
+                    let current = startValue;
+
+                    const updateCounter = () => {
+                        current += 1;
+                        element.textContent = current;
+
+                        if (current < endValue) {
+                            setTimeout(updateCounter, stepTime);
+                        }
+                    };
+
+                    updateCounter();
+                });
+            });
+        </script>
+
+        <div class="flex flex-wrap justify-center my-8 gap-4">
+            <button onclick="filterSelection('web-design')"
+                class="transition duration-500 inline-flex items-center gap-2 border border-rose-600 bg-zinc-950 px-6 py-2 text-sm text-white transition hover:bg-transparent hover:text-white hover:opacity-20 focus:outline-none focus:ring active:bg-white/90 sm:px-8 sm:py-3 sm:text-base">
+                <span class="font-medium">Web Design</span>
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+            </button>
+            <button onclick="filterSelection('mobile-app-design')"
+                class="transition duration-500 inline-flex items-center gap-2 border border-rose-600 bg-zinc-950 px-6 py-2 text-sm text-white transition hover:bg-transparent hover:text-white hover:opacity-20 focus:outline-none focus:ring active:bg-white/90 sm:px-8 sm:py-3 sm:text-base">
+                <span class="font-medium">Mobile Design</span>
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+            </button>
+        </div>
+        
+        <div class="w-full px-2 flex flex-wrap justify-center">
+            <div class="mb-0 p-4 md:w-1/2" data-category="web-design">
+                <div class="shadow-md overflow-hidden">
+                    <img src="image/My Portofolio One.png" alt="" width="w-full" class="hover:opacity-70 transition-opacity transition duration-500">
+                    <div class="mt-8">
+                        <p class="text-xl mb-2 mt-6 text-left">Bike Web Design</p>
+                        <a href="Bike Design.html">
+                            <p
+                                class="text-white mb-4 mt-6 text-left inline-flex items-center gap-2 hover:opacity-80 transition-opacity transition duration-500">
+                                <img src="https://img.icons8.com/ios-filled/50/ffffff/book.png" alt="Book Icon"
+                                    class="w-5 h-5">
+                                View Study Case
+                            </p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-0 p-4 md:w-1/2" data-category="mobile-app-design">
+                <div class="shadow-md overflow-hidden">
+                    <img src="image/My Portofolio Tree.png" alt="" width="w-full" class="hover:opacity-70 transition-opacity transition duration-500">
+                    <div class="mt-8">
+                        <p class="text-xl mb-2 mt-6 text-left">Sneakers Mobile App Design</p>
+                        <a href="Sneakers Design.html">
+                            <p
+                                class="text-white mb-4 mt-6 text-left inline-flex items-center gap-2 hover:opacity-80 transition-opacity duration-300">
+                                <img src="https://img.icons8.com/ios-filled/50/ffffff/book.png" alt="Book Icon"
+                                    class="w-5 h-5">
+                                View Study Case
+                            </p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-0 p-4 md:w-1/2" data-category="mobile-app-design">
+                <div class="shadow-md overflow-hidden">
+                    <img src="image/My Portofolio four.png" alt="" width="w-full" class="hover:opacity-70 transition-opacity transition duration-500">
+                    <div class="mt-8">
+                        <p class="text-xl mb-2 mt-6 text-left">Coffee Mobile App Design</p>
+                        <a href="Coffee Design.html">
+                            <p
+                                class="text-white mb-4 mt-6 text-left inline-flex items-center gap-2 hover:opacity-80 transition-opacity transition duration-500">
+                                <img src="https://img.icons8.com/ios-filled/50/ffffff/book.png" alt="Book Icon"
+                                    class="w-5 h-5" class="hover:opacity-70 transition-opacity transition duration-500">
+                                View Study Case
+                            </p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-0 p-4 md:w-1/2" data-category="web-design">
+                <div class="shadow-md overflow-hidden">
+                    <img src="image/My Portofolio Two.png" alt="" width="w-full" class="hover:opacity-70 transition-opacity transition duration-500">
+                    <div class="mt-8">
+                        <p class="text-xl mb-2 mt-6 text-left">Food Web Design</p>
+                        <a href="Food Design.html">
+                            <p
+                                class="text-white mb-4 mt-6 text-left inline-flex items-center gap-2 hover:opacity-80 transition-opacity transition duration-500">
+                                <img src="https://img.icons8.com/ios-filled/50/ffffff/book.png" alt="Book Icon"
+                                    class="w-5 h-5">
+                                View Study Case
+                            </p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col items-center gap-4 bg-zinc-700 p-10 shadow-lg sm:flex-row sm:justify-between">
+            <strong class="text-lg text-white sm:text-xl"> Interested working with me? </strong>
+            <div class="flex gap-4">
+                <a class="transition duration-500 inline-flex items-center gap-2 border border-rose-600 bg-rose-600 px-6 py-2 text-sm text-white  hover:bg-transparent hover:text-white focus:outline-none focus:ring active:bg-white/90 sm:px-8 sm:py-3 sm:text-base"
+                    href="mailto:algi25357@gmail.com">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4338/4338894.png" alt="Gmail"
+                        class="w-4 h-4 sm:w-6 sm:h-6 filter invert">
+                    <span>Email Me</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .filter-btn {
+            padding: 10px 20px;
+            background-color: #3490dc;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background-color: #2779bd;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+    </style>
+
+    <script>
+        function filterSelection(category) {
+            var items = document.querySelectorAll('[data-category]'); // Ambil semua elemen yang memiliki atribut data-category
+
+            if (category === 'all') { // Jika kategori 'all' dipilih, tampilkan semua item
+                items.forEach(function (item) {
+                    item.classList.remove('hidden'); // Hapus kelas 'hidden' untuk menampilkan item
+                });
+            } else { // Jika kategori tertentu dipilih, filter item berdasarkan kategori
+                items.forEach(function (item) {
+                    if (item.getAttribute('data-category') === category) {
+                        item.classList.remove('hidden'); // Tampilkan item yang sesuai dengan kategori
+                    } else {
+                        item.classList.add('hidden'); // Sembunyikan item yang tidak sesuai
+                    }
+                });
+            }
+        }
+
+        // Panggil fungsi ini untuk menampilkan semua item saat halaman pertama kali dimuat
+        filterSelection('all');
+    </script>
+
+    <footer class="bg-zinc-950">
+        <div class="relative mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8 lg:pt-24">
+            <div class="lg:flex lg:items-end lg:justify-between">
+                <div>
+                    <div class="flex justify-center text-teal-600 lg:justify-start">
+                        <div class="flex items-center gap-4">
+                            <img src="image/Frame 123 (4).png" alt="Logo" class="w-10 h-10 rounded-full">
+
+                            <div class="text-lg font-bold">
+                                <span class="font-serif text-white">Al Ghazaly</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <p class="mx-auto mt-6 max-w-md text-left leading-relaxed text-white sm:text-left lg:text-left">
+                        Thank you for visiting this webpage. I hope you are interested in viewing it and I am sure you,
+                        especially as a designer, can give me some good criticism.
+                    </p>
+                </div>
+
+                <ul class="mt-12 flex flex-wrap justify-center gap-6 md:gap-8 lg:mt-0 lg:justify-end lg:gap-12">
+                    <li>
+                        <a class="text-white transition hover:text-rose-600" href="Home.html"> Home</a>
+                    </li>
+
+                    <li>
+                        <a class="text-white transition hover:text-rose-600" href="Project.html"> Project </a>
+                    </li>
+
+                    <li>
+                        <a class="text-white transition hover:text-rose-600" href="Contact.html"> Contact </a>
+                    </li>
+
+                </ul>
+            </div>
+
+            <p class="mt-12 text-center text-sm text-gray-500 lg:text-right">
+                Created with design <span class="text-2xl">👍</span> by Al Ghazali.
+            </p>
+        </div>
+    </footer>
+</body>
+
+</html>
